@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko-kr">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<!-- action: 인자 처리 페이지(객체) -->
+	<!-- method: HTTP method(전송 방식) -->
+	<!-- 주의) 전송시 기본 인코딩(encoding) 방식: ISO-8859-1 (서유럽어) -->
+	<!-- get : 원래는 read 용도,
+		  전송 인자가 웹브라우저 location bar 노출 
+		  전송량에 제한(256byte ~ 4KB)-->
+	<!-- form 전송 => 화면 전환! -->
+	
+	
+	<!-- <form action="action1.jsp" method="post"> -->
+	<!-- <form action="action2.jsp" method="post"> -->
+	<!-- <form action="action3.jsp" method="post"> -->
+	<form action="action4.jsp" method="post">
+		
+		<!-- 전송할 인자 name으로 받는다 -->
+		name1: <input type="text" id="name1" name="name1" /><br>
+		name2: <input type="text" id="name2" name="name2" /><br>
+		
+		name3: <input type="password" id="name3" name="name3" /><br>
+		
+		name4:
+		<select id="name4" name="name4">
+			<option value="1">Java</option>
+			<option value="2" selected>JSP</option>
+			<option value="3">Python</option>
+			<option value="4">HTML</option>
+		</select> 
+		<br>
+		
+		name5: 
+		야구 <input type="checkbox" id="name5_1" name="name5" value="야구">
+		축구 <input type="checkbox" id="name5_2" name="name5" value="축구">
+		배구 <input type="checkbox" id="name5_3" name="name5" value="배구">
+		농구 <input type="checkbox" id="name5_4" name="name5" value="농구" checked>
+		<br>
+		
+		name6: 
+		컴퓨터 <input type="radio" id="name6_1" name="name6" value="컴퓨터"> &nbsp;
+		영화감상 <input type="radio" id="name6_2" name="name6" value="영화감상"> &nbsp;
+		게임 <input type="radio" id="name6_3" name="name6" value="게임"> &nbsp;
+		독서 <input type="radio" id="name6_4" name="name6" value="독서" checked> &nbsp;
+
+		<input type="submit" value="전송" />
+	</form>
+</body>
+</html>
