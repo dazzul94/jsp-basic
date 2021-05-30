@@ -50,6 +50,13 @@ public class ActionServlet extends HttpServlet {
 		// 인자 => result.jsp 이동(forward)
 		request.setAttribute("txt2", txt);
 		
+		
+		// 인자 => VO => forward
+		VO vo = new VO();
+		vo.setTxt(txt);
+		
+		request.setAttribute("vo", vo);
+		
 		// jsp : <jsp:forward page="result.jsp" />
 		// jsp : pageContext.forward("result.jsp");
 		// spring : return "result"; // result.jsp
