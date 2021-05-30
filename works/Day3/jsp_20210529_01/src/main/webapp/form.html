@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko-kr">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+	window.onload = function() {
+		var btn = document.getElementById("submit_btn");
+		var frm = document.getElementById("frm");
+		
+		btn.onclick = function() {
+			
+			console.log("전송 버튼 클릭");
+			
+			var id = document.getElementById("id").value;
+			var name = document.getElementById("name").value;
+			
+			// 정규식(regex : regular expression)
+			var regexId = /[a-zA-Z]{1}\w{7,19}/; 
+			var regexName = /[가-힣]{2,20}/;
+			
+			var flag_id; // id 필드 점검 점검 변수(플래그 변수)
+			var flag_name; // name 필드 점검 점검 변수(플래그 변수)
+			
+			if (regexId.test(id)) {
+				console.log("올바른 ID 값입니다.");
+				flag_id = 'true';
+			} else {
+				console.log("올바른 ID 값이 아닙니다.");
+				flag_id = 'false';
+				// frm.id.focus();
+			}
+			
+			if (regexName.test(name)) {
+				console.log("올바른 이름입니다.");
+				flag_name = 'true';
+			} else {
+				console.log("올바른 이름이 아닙니다.");
+				flag_name = 'false';
+				frm.name.focus();
+			}
+			
+			if (flag_id == 'true' && flag_name == 'true') { 
+				// 모든 필드들 점검
+				alert("모든 필드 점검 !")
+				frm.submit();
+			} else {
+				
+				frm.reset();
+				if (flag_id == 'false') {
+					frm.id.focus();
+				}
+				else if (flag_name == 'false') {
+					frm.name.focus();
+				}	
+			} //
+		}
+	}
+</script>
+</head>
+<body>
+	<!-- JSP : contextPath
+		EL : ${pageContext.request.contextPath}
+		표현식 : <%= request.getContextPath() %>
+	 -->
+	<form id="frm" method="get" action="demo.do">
+	<!-- <form method="POST" action="/jsp_20210529_1/demo.do"> -->
+	
+	    <!-- 필수 항목 : required, regex(정규식) : pattern -->
+		id : <input type="text" id="id" name="id" 
+			    pattern="[a-zA-Z]{1}\w{7,19}" 
+			    required
+			    title="숫자 8~20사이로 입력하십시오."><br>
+		name : <input type="text" id="name" name="name"
+				pattern="[가-힣]{2,20}"
+				title="한글 이름으로 2~20자 사이로 입력하십시오."><br>
+		<button id="submit_btn" type="button">전송</button>
+		
+	</form>
+</body>
+</html>
