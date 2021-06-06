@@ -1,0 +1,9 @@
+스프링
+
+@RestController
+
+@PostMapping("/action.do")
+public String action(){
+
+	return "";
+}
