@@ -1,3 +1,4 @@
+<%@page import="domain.VO"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -20,8 +21,8 @@ result : <c:out value="&lt;${txt2}&gt;" escapeXml="false"/><br>
 result(VO) : ${vo.txt}<br>
 result(VO) : ${vo.getTxt()}<br>
 <%
-	domain.VO vo = new domain.VO();
-    vo = (domain.VO)request.getAttribute("vo");
+	VO vo = new VO();
+    vo = (VO)request.getAttribute("vo");
 	String txt = vo.getTxt();
 %>
 result(VO) :<%=txt %>  

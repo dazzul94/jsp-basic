@@ -1,4 +1,4 @@
-package servlet;
+package domain;
 
 import java.util.Date;
 
