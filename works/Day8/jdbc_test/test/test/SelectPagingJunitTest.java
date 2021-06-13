@@ -27,6 +27,8 @@ public class SelectPagingJunitTest {
 
 	@Test
 	public void test() {
+		
+		// select * from member_tbl limit (page-1)*limit, limit
 		members = dao.getMembersByPage(0, 5);
 //		assertNotNull(members);	// 결과 유무 점검
 		

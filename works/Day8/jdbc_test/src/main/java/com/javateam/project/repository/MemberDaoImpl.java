@@ -283,7 +283,7 @@ public final class MemberDaoImpl implements MemberDao {
 			pstmt = con.prepareStatement(sql);
 			
 			// 인자 처리 
-			pstmt.setLong(1, page);
+			pstmt.setLong(1, (page-1) * limit);
 			pstmt.setLong(2, limit);
 			
 			rs = pstmt.executeQuery();
