@@ -15,8 +15,9 @@ public interface MemberDao {
 	/**
 	 * 회원정보 수정
 	 * @param member 회원 객체
+	 * @return 
 	 */
-	void updateMember(MemberVo member);
+	boolean updateMember(MemberVo member);
 	
 	/**
 	 * 회원정보 삭제

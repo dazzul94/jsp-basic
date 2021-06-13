@@ -25,7 +25,7 @@ public final class MemberDaoImpl implements MemberDao {
 	private MemberDaoImpl() {}
 	
 	// 간단한 싱글톤 패턴 적용( DAO의 보안성 확보를 위해)
-	public static MemberDaoImpl getInstatnce() {
+	public static MemberDaoImpl getInstance() {
 		
 		instance = new MemberDaoImpl();
 		return instance;
@@ -34,6 +34,8 @@ public final class MemberDaoImpl implements MemberDao {
 	@Override
 	public boolean insertMember(MemberVo member) {
 
+		String methodName = new Exception().getStackTrace()[0].getMethodName();
+		
 		// 저장 성공 여부 플래그
 		boolean result = false;
 		
@@ -83,7 +85,7 @@ public final class MemberDaoImpl implements MemberDao {
 				e1.printStackTrace();
 			} // 롤백
 			
-			System.err.println(e.getStackTrace()[0].getMethodName() + ": 회원정보 저장에 실패");
+			System.err.println(methodName + ": 회원정보 저장에 실패");
 			e.printStackTrace();
 		} finally {
 			// 자원 반납			
@@ -93,9 +95,57 @@ public final class MemberDaoImpl implements MemberDao {
 	}
 
 	@Override
-	public void updateMember(MemberVo member) {
-		// TODO Auto-generated method stub
-
+	public boolean updateMember(MemberVo member) {
+String methodName = new Exception().getStackTrace()[0].getMethodName();
+		
+		// 저장 성공 여부 플래그
+		boolean result = false;
+		
+		// DB 연결
+		Connection con = DbUtil.connect();
+		
+		// SQL 구문
+		// ex) MyBatis => @, XML mapper로 독립
+		String sql = "UPDATE member_tbl SET pw=?, address=? WHERE id=?";
+		
+		// SQL 처리 객체 : ? 인자 사용 가능
+		PreparedStatement pstmt = null;
+		try {
+			// 트랜잭션(transaction)
+			con.setAutoCommit(false);	// 수동 커밋모드로 전환
+			
+			pstmt = con.prepareStatement(sql);
+			
+			// 인자 처리 
+			pstmt.setString(1, member.getPw());
+			pstmt.setString(2, member.getAddress());
+			pstmt.setString(3, member.getId());
+			
+			// SQL 실행 : 메시징
+			if(pstmt.executeUpdate() == 1) {
+				System.out.println("회원정보 수정에 성공");
+				result = true;
+			} else {
+				System.err.println("회원정보 수정에 실패");
+				result = false;
+			}
+			con.commit(); // 커밋
+			
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} // 롤백
+			
+			System.err.println(methodName + ": 회원정보 수정에 실패");
+			e.printStackTrace();
+		} finally {
+			// 자원 반납			
+			DbUtil.close(con, pstmt, null);
+		}
+		return result;
 	}
 
 	@Override
