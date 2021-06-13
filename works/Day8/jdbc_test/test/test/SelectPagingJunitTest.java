@@ -33,14 +33,11 @@ public class SelectPagingJunitTest {
 //		assertNotNull(members);	// 결과 유무 점검
 		
 		// 결과의 개수로 점검
-		assertEquals(5, members.size());
+		// assertEquals(5, members.size());
 		
-		// 맨 처음 , 마지막 요소가 동일한지 점검
-		// 중복 데이터 출력 여부 점검
-//		int lastNum = members.size() - 1;
-//		
-//		System.out.println("1 : " + members.get(0));
-//		System.out.println("2 : " + members.get(lastNum));
-//		assertFalse(members.get(0).equals(members.get(lastNum)));
+		// 특정 데이터 일치 여부 점검 
+		// 페이지의
+		assertEquals("java9", members.get(2).getId());
+		
 	} //
 }
