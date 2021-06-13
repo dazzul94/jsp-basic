@@ -3,7 +3,9 @@ package com.javateam.project.repository;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.javateam.project.domain.MemberVo;
@@ -96,7 +98,7 @@ public final class MemberDaoImpl implements MemberDao {
 
 	@Override
 	public boolean updateMember(MemberVo member) {
-String methodName = new Exception().getStackTrace()[0].getMethodName();
+		String methodName = new Exception().getStackTrace()[0].getMethodName();
 		
 		// 저장 성공 여부 플래그
 		boolean result = false;
@@ -156,8 +158,57 @@ String methodName = new Exception().getStackTrace()[0].getMethodName();
 
 	@Override
 	public List<MemberVo> getAllMembers() {
-		// TODO Auto-generated method stub
-		return null;
+		String methodName = new Exception().getStackTrace()[0].getMethodName();
+		
+		// 결과값 처리
+		List<MemberVo> members = new ArrayList<>();
+		MemberVo member = null;
+		
+		// DB 연결
+		Connection con = DbUtil.connect();
+		
+		// SQL 구문
+		String sql = "SELECT * FROM member_tbl";
+		
+		// SQL 처리 객체 : ? 인자 사용 가능
+		PreparedStatement pstmt = null;
+		
+		// SQL 결과셋 객체
+		ResultSet rs = null;
+		
+		try {
+			// 트랜잭션(transaction)
+			con.setAutoCommit(false);	// 수동 커밋모드로 전환
+			pstmt = con.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				member = new MemberVo();
+				// rs.getString(1);
+				member.setId(rs.getString("id"));
+				member.setPw(rs.getString("pw"));
+				member.setName(rs.getString("name"));
+				member.setAddress(rs.getString("address"));
+				member.setJoindate(new java.util.Date(rs.getDate("joindate").getTime()));
+				
+				members.add(member);
+			} //
+			con.commit();
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			} // 롤백
+			
+			System.err.println(methodName + ": 회원정보 조회에 실패");
+			e.printStackTrace();
+		} finally {
+			// 자원 반납			
+			DbUtil.close(con, pstmt, rs);
+		}
+		return members;
 	}
 
 	@Override
