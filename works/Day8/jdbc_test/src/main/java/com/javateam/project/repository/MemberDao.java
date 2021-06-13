@@ -23,8 +23,9 @@ public interface MemberDao {
 	 * 회원정보 삭제
 	 * 
 	 * @param id 회원 아이디
+	 * @return 
 	 */
-	void deleteMember(String id);
+	boolean deleteMember(String id);
 	
 	/**
 	 * 전체 회원정보 조회

@@ -151,9 +151,55 @@ public final class MemberDaoImpl implements MemberDao {
 	}
 
 	@Override
-	public void deleteMember(String id) {
-		// TODO Auto-generated method stub
-
+	public boolean deleteMember(String id) {
+		String methodName = new Exception().getStackTrace()[0].getMethodName();
+		
+		// 저장 성공 여부 플래그
+		boolean result = false;
+		
+		// DB 연결
+		Connection con = DbUtil.connect();
+		
+		// SQL 구문
+		// ex) MyBatis => @, XML mapper로 독립
+		String sql = "DELETE FROM member_tbl WHERE id=?";
+		
+		// SQL 처리 객체 : ? 인자 사용 가능
+		PreparedStatement pstmt = null;
+		try {
+			// 트랜잭션(transaction)
+			con.setAutoCommit(false);	// 수동 커밋모드로 전환
+			
+			pstmt = con.prepareStatement(sql);
+			
+			// 인자 처리 
+			pstmt.setString(1, id);
+			
+			// SQL 실행 : 메시징
+			if(pstmt.executeUpdate() == 1) {
+				System.out.println("회원정보 삭제에 성공");
+				result = true;
+			} else {
+				System.err.println("회원정보 삭제에 실패");
+				result = false;
+			}
+			con.commit(); // 커밋
+			
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} // 롤백
+			
+			System.err.println(methodName + ": 회원정보 삭제에 실패");
+			e.printStackTrace();
+		} finally {
+			// 자원 반납			
+			DbUtil.close(con, pstmt, null);
+		}
+		return result;
 	}
 
 	@Override
@@ -213,14 +259,115 @@ public final class MemberDaoImpl implements MemberDao {
 
 	@Override
 	public List<MemberVo> getMembersByPage(int page, int limit) {
-		// TODO Auto-generated method stub
-		return null;
+		String methodName = new Exception().getStackTrace()[0].getMethodName();
+		
+		// 결과값 처리
+		List<MemberVo> members = new ArrayList<>();
+		MemberVo member = null;
+		
+		// DB 연결
+		Connection con = DbUtil.connect();
+		
+		// SQL 구문
+		String sql = "SELECT * FROM member_tbl limit ?, ?";
+		
+		// SQL 처리 객체 : ? 인자 사용 가능
+		PreparedStatement pstmt = null;
+		
+		// SQL 결과셋 객체
+		ResultSet rs = null;
+		
+		try {
+			// 트랜잭션(transaction)
+			con.setAutoCommit(false);	// 수동 커밋모드로 전환
+			pstmt = con.prepareStatement(sql);
+			
+			// 인자 처리 
+			pstmt.setLong(1, page);
+			pstmt.setLong(2, limit);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				member = new MemberVo();
+				// rs.getString(1);
+				member.setId(rs.getString("id"));
+				member.setPw(rs.getString("pw"));
+				member.setName(rs.getString("name"));
+				member.setAddress(rs.getString("address"));
+				member.setJoindate(new java.util.Date(rs.getDate("joindate").getTime()));
+				
+				members.add(member);
+			} //
+			con.commit();
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			} // 롤백
+			
+			System.err.println(methodName + ": 회원정보 조회에 실패");
+			e.printStackTrace();
+		} finally {
+			// 자원 반납			
+			DbUtil.close(con, pstmt, rs);
+		}
+		return members;
 	}
 
 	@Override
 	public MemberVo getMember(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		String methodName = new Exception().getStackTrace()[0].getMethodName();
+		
+		// 결과값 처리
+		MemberVo member = new MemberVo();
+		
+		// DB 연결
+		Connection con = DbUtil.connect();
+		
+		// SQL 구문
+		String sql = "SELECT * FROM member_tbl WHERE id=?";
+		
+		// SQL 처리 객체 : ? 인자 사용 가능
+		PreparedStatement pstmt = null;
+		
+		// SQL 결과셋 객체
+		ResultSet rs = null;
+		
+		try {
+			// 트랜잭션(transaction)
+			con.setAutoCommit(false);	// 수동 커밋모드로 전환
+			pstmt = con.prepareStatement(sql);
+			
+			// 인자 처리 
+			pstmt.setString(1, id);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				// rs.getString(1);
+				member.setId(rs.getString("id"));
+				member.setPw(rs.getString("pw"));
+				member.setName(rs.getString("name"));
+				member.setAddress(rs.getString("address"));
+				member.setJoindate(new java.util.Date(rs.getDate("joindate").getTime()));
+			} //
+			con.commit();
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			} // 롤백
+			
+			System.err.println(methodName + ": 회원정보 조회에 실패");
+			e.printStackTrace();
+		} finally {
+			// 자원 반납			
+			DbUtil.close(con, pstmt, rs);
+		}
+		return member;
 	}
 
 }
